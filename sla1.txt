@@ -1,0 +1,5 @@
+existem dois tipos de enhancements 
+implicitios que são desenvolvidos
+explicitos que são feitos pela própria sap
+/nmiro 
+transacao de criacao de fatura

@@ -1,0 +1,11 @@
+cssv pusa ponto e virgula para separar 
+
+se for txxt usa #
+dlt adj duplicate comparing
+trasporting no field é so pra ler
+fazer uma tabela que de pra fazer esses comandos
+testar no debbug esse erroo de esperar um erro
+TRY 
+
+CATCH
+TRANSLATE e Condense
