@@ -4,6 +4,16 @@
           ls_rnftc014         TYPE /gfxdsi/rnftc014,
           lv_domvalue         TYPE dd07v-domvalue_l,
           lv_ddtext           TYPE dd07v-ddtext.
+IF lv_begda IS INITIAL.
+  CALL FUCTION 
+
+
+SELECT * FROM /gfxdsi/rnftc002 UP TO 1 ROWS
+      INTO ls_rnftc002
+      WHERE bukrs = iv_bukrs
+        AND inivalid LE is_date-begda
+        AND fimvalid GE is_date-endda.
+    ENDSELECT.
 
     SELECT internal_version
       FROM /gfxdsi/rnftc014
