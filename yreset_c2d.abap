@@ -120,6 +120,14 @@ START-OF-SELECTION.
       AND item IN p_item
       AND ano IN p_ano.
 
-  DELETE FROM /gfxdsi/cct007 WHERE ... " Specify conditions
-  DELETE FROM /gfxdsi/cct008 WHERE ... " Specify conditions
+  DELETE FROM /gfxdsi/cct007 WHERE empresa = p_empresa AND
+				   filial  = p_filial  AND
+				   cliente = p_cliente AND. " Specify conditions
+
+  DELETE FROM /gfxdsi/cct008 WHERE empresa    = p_empresa AND
+				   filial     = p_filial  AND
+				   data_venda = p_data_v AND 
+				   item       = p_item   AND 
+				   ano        = p_ano.   " Specify conditions
+"se tiver necessidade..
   DELETE FROM /gfxdsi/cct009 WHERE ... " Specify conditions
