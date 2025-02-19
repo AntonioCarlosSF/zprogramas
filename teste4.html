@@ -1,0 +1,123 @@
+<!-- <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel para TXT</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <h2>Importar Planilha Excel e Exportar para TXT</h2>
+    <input type="file" id="fileInput" accept=".xlsx, .xls">
+    <script>
+        function formatDate(value) {
+            // Verifica se o valor é uma data no formato Excel (número)
+            if (typeof value === 'number') {
+                const date = new Date(Math.round((value - 25569) * 86400000)); // Converte o número para data
+                if (!isNaN(date.getTime())) {
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0'); // Garante que o mês tenha 2 dígitos
+                    const day = String(date.getDate()).padStart(2, '0'); // Garante que o dia tenha 2 dígitos
+                    return `${day}${month}${year}`; // Formato ddmmyyyy
+                }
+            }
+            // Se o valor for uma string no formato "dd/mm/yyyy"
+            if (typeof value === 'string' && /^(\d{2})\/(\d{2})\/(\d{4})$/.test(value.trim())) {
+                const [day, month, year] = value.trim().split('/');
+                return `${day}${month}${year}`; // Formato ddmmyyyy
+            }
+            return value; // Retorna o valor original caso não seja uma data
+        }
+
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.readAsArrayBuffer(file);
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: false });
+
+                let txtContent = rows
+                    .filter(row => row.some(cell => cell !== undefined && cell !== null && cell !== ""))
+                    .map(row => row.map(cell => (cell === undefined || cell === null || cell === "" ? "" : formatDate(cell))).join('\t'))
+                    .join('\n');
+                
+                if (txtContent.trim() === '') {
+                    alert("Erro: Nenhum dado válido foi processado!");
+                    return;
+                }
+                
+                const blob = new Blob([txtContent], { type: 'text/plain' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'output.txt';
+                link.click();
+            };
+        });
+    </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel para TXT</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <h2>Importar Planilha Excel e Exportar para TXT</h2>
+    <input type="file" id="fileInput" accept=".xlsx, .xls">
+    <script>
+        function formatDate(value) {
+            // Verifica se o valor é uma data no formato dd/mm/aaaa
+            if (typeof value === 'string' && /\d{2}\/\d{2}\/\d{4}/.test(value)) {
+                const [day, month, year] = value.split('/');
+                return `${day}${month}${year}`; // Formato ddmmaaaa
+            }
+
+            // Caso o valor já seja um objeto Date, converte para o formato ddmmaaaa
+            if (value instanceof Date) {
+                const day = String(value.getDate()).padStart(2, '0');
+                const month = String(value.getMonth() + 1).padStart(2, '0');
+                const year = value.getFullYear();
+                return `${day}${month}${year}`;
+            }
+
+            return value; // Retorna o valor original se não for uma data
+        }
+
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.readAsArrayBuffer(file);
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                let txtContent = rows
+                    .filter(row => row.some(cell => cell !== undefined && cell !== null && cell !== ""))
+                    .map(row => row.map(cell => formatDate(cell)).join('\t'))
+                    .join('\n');
+                
+                const blob = new Blob([txtContent], { type: 'text/plain' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'output.txt';
+                link.click();
+            };
+        });
+    </script>
+</body>
+</html>
+
